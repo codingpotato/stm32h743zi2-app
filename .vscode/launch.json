@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cortex Debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "servertype": "openocd",
+            "executable": "build/stm32h743zi2-app.elf",
+            "runToMain": true,
+            "configFiles": [
+                "board/st_nucleo_h743zi.cfg"
+            ]
+        }
+    ]
+}

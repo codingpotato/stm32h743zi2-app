@@ -2,8 +2,8 @@
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_nucleo.h"
 
-static void LED_Thread1(void const *argument);
-static void LED_Thread2(void const *argument);
+void LED_Thread1(void *argument);
+void LED_Thread2(void *argument);
 
 osThreadId_t LEDThread1Handle, LEDThread2Handle;
 
@@ -31,7 +31,6 @@ void App_Init(void) {
   BSP_LED_Init(LED2);
 
   LEDThread1Handle = osThreadNew(LED_Thread1, NULL, &LEDThread1_attributes);
-
   LEDThread2Handle = osThreadNew(LED_Thread2, NULL, &LEDThread2_attributes);
 }
 
@@ -40,16 +39,9 @@ void App_Init(void) {
  * @param  thread not used
  * @retval None
  */
-static void LED_Thread1(void const *argument) {
-  uint32_t count = 0;
-  (void)argument;
-
+void LED_Thread1(void *argument) {
   for (;;) {
-    count = osKernelSysTick() + 5000;
-
-    HAL_UART_Transmit(&hcom_uart[COM1], (uint8_t *)"test\n\r", 6,
-                      COM_POLL_TIMEOUT);
-    printf("[Thread1: Toggle LED1 every 200 ms for 5 s\n");
+    uint32_t count = osKernelSysTick() + 5000;
 
     /* Toggle LED1 every 200 ms for 5 s */
     while (count > osKernelSysTick()) {
@@ -65,8 +57,6 @@ static void LED_Thread1(void const *argument) {
     osThreadSuspend(NULL);
 
     count = osKernelSysTick() + 5000;
-
-    printf("[Thread1: Toggle LED1 every 500 ms for 5 s\n");
 
     /* Toggle LED1 every 500 ms for 5 s */
     while (count > osKernelSysTick()) {
@@ -85,14 +75,9 @@ static void LED_Thread1(void const *argument) {
  * @param  argument not used
  * @retval None
  */
-static void LED_Thread2(void const *argument) {
-  uint32_t count;
-  (void)argument;
-
+void LED_Thread2(void *argument) {
   for (;;) {
-    count = osKernelSysTick() + 10000;
-
-    printf("[Thread1: Toggle LED2 every 500 ms for 10 s\n");
+    uint32_t count = osKernelSysTick() + 100000;
 
     /* Toggle LED2 every 500 ms for 10 s */
     while (count > osKernelSysTick()) {
